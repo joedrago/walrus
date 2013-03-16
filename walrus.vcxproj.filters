@@ -21,6 +21,24 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bucket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dyn\src\dyn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="identity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="region.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rule.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="walrus.rc">
@@ -37,6 +55,30 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="walrus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bucket.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dyn\src\dynArray.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dyn\src\dynMap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dyn\src\dynString.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="context.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="identity.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="region.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rule.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
