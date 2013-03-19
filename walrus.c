@@ -99,6 +99,37 @@ INT_PTR CALLBACK WndProc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     return (INT_PTR)FALSE;
 }
 
+static int serve(const char *filename, char **content)
+{
+    int ok = 1;
+    FILE *f = fopen(filename, "rb");
+    if(f)
+    {
+        int s;
+        fseek(f, 0, SEEK_END);
+        s = (int)ftell(f);
+        fseek(f, 0, SEEK_SET);
+
+        if(s > 0)
+        {
+            dsSetLength(content, s);
+            fread(*content, 1, s, f);
+        }
+        else
+        {
+            ok = 0;
+            dsPrintf(content, "failed to read file");
+        }
+        fclose(f);
+    }
+    else
+    {
+        ok = 0;
+        dsPrintf(content, "failed to open file");
+    }
+    return ok;
+}
+
 static int begin_request_handler(struct mg_connection *conn)
 {
     const struct mg_request_info *request_info = mg_get_request_info(conn);
@@ -111,36 +142,51 @@ static int begin_request_handler(struct mg_connection *conn)
 
     if(!strcmp(request_info->uri, "/"))
     {
-        FILE *f = fopen("config.html", "rb");
-        if(f)
-        {
-            int s;
-            fseek(f, 0, SEEK_END);
-            s = (int)ftell(f);
-            fseek(f, 0, SEEK_SET);
-
-            if(s > 0)
-            {
-                dsSetLength(&content, s);
-                fread(content, 1, s, f);
-                contentType = "text/html";
-            }
-            else
-            {
-                ok = 0;
-                dsPrintf(&content, "failed to read file");
-            }
-            fclose(f);
-        }
-        else
-        {
-            ok = 0;
-            dsPrintf(&content, "failed to open file");
-        }
+        ok = serve("config.html", &content);
+        contentType = "text/html";
+    }
+    else if(!strcmp(request_info->uri, "/black.png"))
+    {
+        ok = serve("black.png", &content);
+        contentType = "image/png";
+    }
+    else if(!strcmp(request_info->uri, "/red.png"))
+    {
+        ok = serve("red.png", &content);
+        contentType = "image/png";
+    }
+    else if(!strcmp(request_info->uri, "/green.png"))
+    {
+        ok = serve("green.png", &content);
+        contentType = "image/png";
+    }
+    else if(!strcmp(request_info->uri, "/selectarrow.jpg"))
+    {
+        ok = serve("selectarrow.jpg", &content);
+        contentType = "image/jpeg";
     }
     else if(!strcmp(request_info->uri, "/config"))
     {
         ContextGetConfig(sContext, &content);
+        contentType = "application/json";
+    }
+    else if(!strcmp(request_info->uri, "/steal"))
+    {
+        RECT r = {0};
+        HWND h = GetForegroundWindow();
+        char windowTitle[2048];
+        char windowClass[2048];
+        windowTitle[0] = 0;
+        windowClass[0] = 0;
+        if(h)
+        {
+            GetWindowText(h, windowTitle, 2048);
+            GetClassName (h, windowClass, 2048);
+            GetWindowRect(h, &r);
+        }
+        dsPrintf(&content, "{\"left\":%d,\"top\":%d,\"right\":%d,\"bottom\":%d,\"title\":\"%s\",\"class\":\"%s\"}",
+            r.left, r.top, r.right, r.bottom, windowTitle, windowClass // TODO: escape
+        );
         contentType = "application/json";
     }
     else if(!strcmp(request_info->uri, "/set"))
@@ -171,10 +217,10 @@ static int begin_request_handler(struct mg_connection *conn)
                 "HTTP/1.1 200 OK\r\n"
                 "Content-Type: %s\r\n"
                 "Content-Length: %d\r\n"
-                "\r\n"
-                "%s",
+                "\r\n",
                 contentType,
-                (int)dsLength(&content), content);
+                (int)dsLength(&content));
+        mg_write(conn, content, (int)dsLength(&content));
     }
     else
     {
