@@ -22,10 +22,9 @@ void BucketWindowClear(BucketWindow *bw)
 {
 }
 
-Bucket *BucketCreate(const char *name)
+Bucket *BucketCreate()
 {
     Bucket *bucket = calloc(1, sizeof(Bucket));
-    dsCopy(&bucket->name, name);
     return bucket;
 }
 
@@ -37,7 +36,6 @@ void BucketDestroy(Bucket *bucket)
 
 void BucketClear(Bucket *bucket)
 {
-    dsDestroy(&bucket->name);
     daDestroy(&bucket->windows, BucketWindowDestroy);
     daDestroy(&bucket->identities, IdentityDestroy);
     daDestroy(&bucket->regions, RegionDestroy);
@@ -110,15 +108,11 @@ int BucketAddWindow(Bucket *bucket, HWND hwnd, const char *windowTitle, const ch
     return keep;
 }
 
-static Region *BucketFindRegion(Bucket *bucket, const char *name)
+static Region *BucketFindRegion(Bucket *bucket, int index)
 {
-    int regionIndex;
-    for (regionIndex = 0; regionIndex < daSize(&bucket->regions); ++regionIndex)
+    if((index >= 0) && (index < daSize(&bucket->regions)))
     {
-        if(!strcmp(bucket->regions[regionIndex]->name, name))
-        {
-            return bucket->regions[regionIndex];
-        }
+        return bucket->regions[index];
     }
     return NULL;
 }
@@ -171,7 +165,7 @@ void BucketLayout(Bucket * bucket)
             return;
         }
 
-        printf("running rule %d on region '%s' [%d windows]\n", ruleIndex, rule->region, windowCount);
+        printf("running rule %d on region '%d' [%d windows]\n", ruleIndex, rule->region, windowCount);
 
         slice = RuleSlice(rule, region);
 

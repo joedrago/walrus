@@ -102,7 +102,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4011;4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4011;4996;4244;4267</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>dyn/src</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -147,9 +147,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="bucket.h" />
+    <ClInclude Include="cJSON.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="dyn\src\dyn.h" />
     <ClInclude Include="identity.h" />
+    <ClInclude Include="mongoose.h" />
     <ClInclude Include="region.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="rule.h" />
@@ -164,11 +166,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="bucket.c" />
+    <ClCompile Include="cJSON.c" />
     <ClCompile Include="context.c" />
     <ClCompile Include="dyn\src\dynArray.c" />
     <ClCompile Include="dyn\src\dynMap.c" />
     <ClCompile Include="dyn\src\dynString.c" />
     <ClCompile Include="identity.c" />
+    <ClCompile Include="mongoose.c" />
     <ClCompile Include="region.c" />
     <ClCompile Include="rule.c" />
     <ClCompile Include="walrus.c" />

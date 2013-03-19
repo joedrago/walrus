@@ -5,15 +5,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-Rule *RuleCreate(int from, int to, int flags, const char *region, int side, int size)
+Rule *RuleCreate(int from, int to, int flags, int region, int side, int size)
 {
     Rule *rule = calloc(1, sizeof(Rule));
-    dsCopy(&rule->region, region);
     rule->fromIndex = from;
     rule->toIndex = to;
     rule->flags = flags;
     rule->side = side;
     rule->size = size;
+    rule->region = region;
     return rule;
 }
 
@@ -25,7 +25,6 @@ void RuleDestroy(Rule *rule)
 
 void RuleClear(Rule *rule)
 {
-    dsDestroy(&rule->region);
 }
 
 RECT RuleSlice(Rule * rule, Region * region)

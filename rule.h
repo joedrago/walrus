@@ -26,15 +26,15 @@ enum // RuleSide
 
 typedef struct Rule
 {
-    char *region;
     int fromIndex;
     int toIndex;    // -1 is 'the rest'
     int flags;
     int side;
     int size; // for SLICE*
+    int region;
 } Rule;
 
-Rule *RuleCreate(int from, int to, int flags, const char *region, int side, int size);
+Rule *RuleCreate(int from, int to, int flags, int region, int side, int size);
 void RuleDestroy(Rule *rule);
 void RuleClear(Rule *rule);
 

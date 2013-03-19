@@ -14,16 +14,18 @@ enum // RegionType
 
 typedef struct Region
 {
-    char *name;
     int type;
-    int which; // for REGIONTYPE_MONITOR
+    int which; // monitor index for type MONITOR
     RECT r;
 
     RECT leftover; // used during layout
 } Region;
 
-Region *RegionCreate(int type, const char *name);
+Region *RegionCreate(int type);
 void RegionDestroy(Region *region);
 void RegionClear(Region *region);
+
+const char *RegionTypeString(int type);
+int RegionTypeFromString(const char *s);
 
 #endif

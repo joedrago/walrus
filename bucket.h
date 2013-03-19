@@ -20,14 +20,13 @@ void BucketWindowClear(BucketWindow *bw);
 
 typedef struct Bucket
 {
-    char *name;
     struct Identity **identities;
     BucketWindow **windows;
     struct Region **regions;
     struct Rule **rules;
 } Bucket;
 
-Bucket *BucketCreate(const char *name);
+Bucket *BucketCreate();
 void BucketDestroy(Bucket *bucket);
 void BucketClear(Bucket *bucket);
 
