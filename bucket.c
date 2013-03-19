@@ -172,30 +172,38 @@ void BucketLayout(Bucket * bucket)
         }
 
         printf("running rule %d on region '%s' [%d windows]\n", ruleIndex, rule->region, windowCount);
-        if(rule->type & RULEFLAG_SLICE)
-        {
-            slice = RuleSlice(rule, region);
-        }
-        else // TODO: check for other possibilities
-        {
-        }
 
-        if(rule->type & RULEFLAG_HORIZONTAL)
+        slice = RuleSlice(rule, region);
+
+        if(rule->flags & RULEFLAG_SPLIT)
         {
-            windowPortion = (slice.bottom - slice.top) / windowCount;
-            slice.bottom -= (windowPortion * (windowCount - 1));
-        }
-        else
-        {
-            windowPortion = (slice.right - slice.left) / windowCount;
-            slice.right -= (windowPortion * (windowCount - 1));
+            if(rule->flags & RULEFLAG_HORIZONTAL)
+            {
+                windowPortion = (slice.bottom - slice.top) / windowCount;
+                slice.bottom -= (windowPortion * (windowCount - 1));
+            }
+            else
+            {
+                windowPortion = (slice.right - slice.left) / windowCount;
+                slice.right -= (windowPortion * (windowCount - 1));
+            }
         }
 
         for(windowIndex = 0; windowIndex < daSize(&bucket->windows); ++windowIndex)
         {
             BucketWindow *bw = bucket->windows[windowIndex];
 
-            if(rule->type & RULEFLAG_SLICE)
+            if(rule->flags & RULEFLAG_MAXIMIZE)
+            {
+                // TODO: move to the proper monitor
+                ShowWindow(bw->hwnd, SW_MAXIMIZE);
+            }
+            else if(rule->flags & RULEFLAG_MINIMIZE)
+            {
+                // TODO: move to the proper monitor
+                ShowWindow(bw->hwnd, SW_MINIMIZE);
+            }
+            else
             {
                 printf("setting window %d to [%d, %d, %d, %d]\n",
                         windowIndex,
@@ -212,26 +220,19 @@ void BucketLayout(Bucket * bucket)
                         SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOZORDER | SWP_SHOWWINDOW
                         );
 
-                if(rule->type & RULEFLAG_HORIZONTAL)
+                if(rule->flags & RULEFLAG_SPLIT)
                 {
-                    slice.top += windowPortion;
-                    slice.bottom += windowPortion;
+                    if(rule->flags & RULEFLAG_HORIZONTAL)
+                    {
+                        slice.top += windowPortion;
+                        slice.bottom += windowPortion;
+                    }
+                    else
+                    {
+                        slice.left += windowPortion;
+                        slice.right += windowPortion;
+                    }
                 }
-                else
-                {
-                    slice.left += windowPortion;
-                    slice.right += windowPortion;
-                }
-            }
-            else if(rule->type == RULETYPE_MAXIMIZE)
-            {
-                // TODO: move to the proper monitor
-                ShowWindow(bw->hwnd, SW_MAXIMIZE);
-            }
-            else if(rule->type == RULETYPE_MINIMIZE)
-            {
-                // TODO: move to the proper monitor
-                ShowWindow(bw->hwnd, SW_MINIMIZE);
             }
         }
     }

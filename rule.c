@@ -5,13 +5,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-Rule *RuleCreate(int from, int to, int type, const char *region, int side, int size)
+Rule *RuleCreate(int from, int to, int flags, const char *region, int side, int size)
 {
     Rule *rule = calloc(1, sizeof(Rule));
     dsCopy(&rule->region, region);
     rule->fromIndex = from;
     rule->toIndex = to;
-    rule->type = type;
+    rule->flags = flags;
     rule->side = side;
     rule->size = size;
     return rule;
@@ -52,7 +52,7 @@ RECT RuleSlice(Rule * rule, Region * region)
         break;
     }
 
-    if(rule->type & RULEFLAG_PERCENT)
+    if(rule->flags & RULEFLAG_PERCENT)
     {
         wanted = (available * rule->size) / 100;
     }

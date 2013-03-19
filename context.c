@@ -10,18 +10,20 @@
 Context *ContextCreate()
 {
     Context *context = calloc(1, sizeof(Context));
+
     Bucket *bucket = BucketCreate("Notepads");
     Identity *identity = IdentityCreate(NULL, "Notepad");
     Region *region = RegionCreate(REGIONTYPE_COORDS, "main");
-    Rule *rule = RuleCreate(0, -1, RULETYPE_VSLICE_PERCENT, "main", RULESIDE_TOP, 100);
-    region->r.left = 1685;
-    region->r.top = 5;
+    Rule *rule = RuleCreate(0, -1, RULEFLAG_SPLIT|RULEFLAG_PERCENT, "main", RULESIDE_TOP, 100);
+    region->r.left = 2485;
+    region->r.top = 600;
     region->r.right = 3000;
-    region->r.bottom = 600;
+    region->r.bottom = 1000;
     daPush(&bucket->identities, identity);
     daPush(&bucket->regions, region);
     daPush(&bucket->rules, rule);
     daPush(&context->buckets, bucket);
+
     return context;
 }
 

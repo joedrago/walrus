@@ -3,3 +3,4 @@ build
 *.sdf
 ipch
 *.user
+tags

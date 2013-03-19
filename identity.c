@@ -33,6 +33,8 @@ void IdentityClear(Identity *identity)
 int IdentityMatches(Identity *identity, const char *windowTitle, const char *windowClass)
 {
     int matches = 1;
+    if(!dsLength(&identity->titleRegex) && !dsLength(&identity->classRegex))
+        return 0;
     if(identity->titleRegex)
     {
         if(!strstr(windowTitle, identity->titleRegex))
