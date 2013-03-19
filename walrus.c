@@ -130,6 +130,28 @@ static int serve(const char *filename, char **content)
     return ok;
 }
 
+static void escape(char *str, char *output)
+{
+    char *src = str;
+    char *dst = output;
+    for(; *src; ++src)
+    {
+        switch(*src)
+        {
+            case '\\':
+            case '"':
+            {
+                *dst = '\\';
+                ++dst;
+            }
+        }
+
+        *dst = *src;
+        ++dst;
+    }
+    *dst = 0;
+}
+
 static int begin_request_handler(struct mg_connection *conn)
 {
     const struct mg_request_info *request_info = mg_get_request_info(conn);
@@ -176,16 +198,23 @@ static int begin_request_handler(struct mg_connection *conn)
         HWND h = GetForegroundWindow();
         char windowTitle[2048];
         char windowClass[2048];
+        char windowTitleEsc[2048];
+        char windowClassEsc[2048];
+        char *temp = NULL;
         windowTitle[0] = 0;
         windowClass[0] = 0;
+        windowTitleEsc[0] = 0;
+        windowClassEsc[0] = 0;
         if(h)
         {
             GetWindowText(h, windowTitle, 2048);
             GetClassName (h, windowClass, 2048);
+            escape(windowTitle, windowTitleEsc);
+            escape(windowClass, windowClassEsc);
             GetWindowRect(h, &r);
         }
         dsPrintf(&content, "{\"left\":%d,\"top\":%d,\"right\":%d,\"bottom\":%d,\"title\":\"%s\",\"class\":\"%s\"}",
-            r.left, r.top, r.right, r.bottom, windowTitle, windowClass // TODO: escape
+            r.left, r.top, r.right, r.bottom, windowTitleEsc, windowClassEsc
         );
         contentType = "application/json";
     }

@@ -250,10 +250,6 @@ input {
 select {
    background: transparent;
    font-family: monospace;
-   /*line-height: 1;
-   border: 0;
-   border-radius: 0;
-   height: 34px;*/
    border: 0px;
    border-left: 1px solid #333333;
    border-bottom: 1px solid #333333;
@@ -600,8 +596,10 @@ function delBucket(bucketIndex)
 
 function stealIdentity(bucketIndex, identityIndex)
 {
+    console.log("wat wat");
     var f = function(data)
     {
+        console.log("got: " + JSON.stringify(data));
         var identity = context.buckets[bucketIndex].identities[identityIndex];
         identity.titleRegex = data.title;
         identity.classRegex = data.class;
@@ -661,12 +659,12 @@ function genIdentity(BI, II, identity)
     var html = "";
     html += "<div class=\"identity\">";
     html += "<div title=\"Delete Identity\" class=\"rightaction blackicon icon-circle-close\" onclick=\"delIdentity("+BI+", "+II+")\"></div>";
-    html += "<div title=\"Steal From Window\" class=\"rightaction blackicon icon-newwin\" onclick=\"stealIdentity("+BI+", "+II+")\"></div>";
     html += "<div class=\"TH\">Identity "+II+":</div>";
     html += "<div class=\"titleregex\"><span class=\"TA\">Title regex:</span><input class=\"textinput\" id=\"b"+BI+"i"+II+"titleregex\"";
     html +=     " onchange=\"pullIdentity("+BI+","+II+")\"";
     html +=     " onkeyup=\"pullIdentity("+BI+","+II+")\"";
     html +=     " value=\""+esc(identity.titleRegex)+"\"></div>";
+    html += "<div title=\"Steal From Window\" class=\"rightaction blackicon icon-newwin\" onclick=\"stealIdentity("+BI+", "+II+")\"></div>";
     html += "<div class=\"classregex\"><span class=\"TA\">Class regex:</span><input class=\"textinput\" id=\"b"+BI+"i"+II+"classregex\"";
     html +=     " onchange=\"pullIdentity("+BI+","+II+")\"";
     html +=     " onkeyup=\"pullIdentity("+BI+","+II+")\"";
